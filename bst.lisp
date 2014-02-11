@@ -30,11 +30,6 @@
 				(bst-find obj (node-l bst) <)
 				(bst-find obj (node-r bst) <))))))
 
-(defun in-order-visit (bst)
-  (when bst 
-	(in-order-visit (node-l bst))
-	(format t " ~A" (node-elt bst))
-	(in-order-visit (node-r bst))))
 
 (defun bst-min (bst)
   (and bst
@@ -86,6 +81,17 @@
 				 :l (node-l bst)
 				 :r (bst-remove-max (node-r bst)))))
 
+(defun in-order-visit (bst)
+  (when bst 
+	(in-order-visit (node-l bst))
+	(format t " ~A" (node-elt bst))
+	(in-order-visit (node-r bst))))
+
+(defun bst-traverser(fn bst)
+  (when bst
+	(bst-traverse fn (node-l bst))
+	(funcall fn (node-elt bst))
+	(bst-traverse fn (nde-r bst))))
 (let ((nums nil))
   (dolist (x '(5 8 4 2 1 9 6 7 3))
 	(setf nums (bst-insert x nums #'<)))
@@ -94,4 +100,5 @@
   (setf nums (bst-remove 5 nums #'<))
   (format t "~%")
   (in-order-visit nums)
-  (format t "~%"))
+  (format t "~%")
+  (bst-traverser #'princ nums))
